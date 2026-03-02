@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Node {
-    private byte[] state;                 // 25 tiles (0..24), 0 = blank
+    private byte[] state;                 
     private List<Node> children = new ArrayList<>();
     private Node parent;
 
@@ -10,8 +10,6 @@ public class Node {
     private int estimatedCostToGoal;      // h(n)
     private int totalCost;                // f(n)=g+h
     private int depth;
-
-    // (opcional) guardar el movimiento que llevó a este nodo
     private MovementType moveFromParent;
 
     public Node(byte[] state) {
