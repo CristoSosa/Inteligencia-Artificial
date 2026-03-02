@@ -19,7 +19,6 @@ public class NodeUtil {
         GOAL_R[0] = 4; GOAL_C[0] = 4;
     }
 
-    // Key compacta: 25 tiles * 5 bits = 125 bits => 2 longs
     public static final class Key {
         public final long hi;
         public final long lo;
@@ -40,24 +39,21 @@ public class NodeUtil {
 
    public static Key keyOf(byte[] s) {
     long lo = 0L, hi = 0L;
-    int bit = 0; // 0..124
+    int bit = 0; 
 
     for (int i = 0; i < SIZE; i++) {
-        long v = (long)(s[i] & 31); // 5 bits
+        long v = (long)(s[i] & 31); 
 
         if (bit <= 59) {
-            // cabe completo en lo
             lo |= (v << bit);
         } else if (bit >= 64) {
-            // cabe completo en hi
             hi |= (v << (bit - 64));
         } else {
-            // cruza el borde: bit está en 60..63
-            int loBits = 64 - bit;              // 4..1
-            long loMask = (1L << loBits) - 1L;  // máscara de los bits que caben en lo
+            int loBits = 64 - bit;             
+            long loMask = (1L << loBits) - 1L;  
 
-            lo |= ((v & loMask) << bit);        // parte baja a lo
-            hi |= (v >>> loBits);               // parte alta a hi
+            lo |= ((v & loMask) << bit);        
+            hi |= (v >>> loBits);              
         }
 
         bit += 5;
