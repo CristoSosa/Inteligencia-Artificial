@@ -214,14 +214,34 @@ def reproducir_audio_automatico(ruta_audio, placeholder):
 
 # Limpiar audios temporales anteriores
 def limpiar_audios_temporales():
-    folder = "temp_audio"
-    if os.path.exists(folder):
-        for file in os.listdir(folder):
-            if file.endswith(".wav"):
+    carpetas = {
+        "temp_audio": (".wav",),
+        "temp_frames": (".jpg", ".jpeg", ".png"),
+    }
+    for folder, extensiones in carpetas.items():
+        if os.path.exists(folder):
+            for file in os.listdir(folder):
+                if not file.lower().endswith(extensiones):
+                    continue
                 try:
                     os.remove(os.path.join(folder, file))
                 except Exception:
                     pass
+
+
+def guardar_frame_comentado(frame_rgb, timestamp_seg):
+    os.makedirs("temp_frames", exist_ok=True)
+    frame_filename = f"frame_{int(timestamp_seg * 1000)}ms.jpg"
+    frame_path = os.path.join("temp_frames", frame_filename)
+    frame_bgr = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR)
+    cv2.imwrite(frame_path, frame_bgr, [int(cv2.IMWRITE_JPEG_QUALITY), 88])
+    return frame_path
+
+
+def formatear_tiempo(segundos):
+    minutos = int(segundos // 60)
+    segundos_restantes = int(segundos % 60)
+    return f"{minutos:02d}:{segundos_restantes:02d}"
 
 # --- HEADER PRINCIPAL ---
 st.markdown('<div class="neon-title">🎙️ ComentaristaIA</div>', unsafe_allow_html=True)
@@ -296,26 +316,10 @@ usar_nlp_hf = st.sidebar.toggle(
     help="Usa un modelo NLP instruction de Hugging Face para redactar el comentario. Si falla la descarga o la generación, la app usa plantillas como respaldo."
 )
 
-# Personalización de Etiquetas de CLIP
-st.sidebar.subheader("🏷️ Etiquetas de Visión (SigLIP)")
-etiquetas_defecto = ia_engine.ETIQUETAS_JUEGOS[juego_seleccionado]
-etiquetas_texto = st.sidebar.text_area(
-    "Modifica las etiquetas (separadas por comas):",
-    value=", ".join(etiquetas_defecto),
-    key=f"etiquetas_{juego_seleccionado}",
-    help="SigLIP funciona mejor con descripciones detalladas. Si editas esto, escribe etiquetas claras. Por defecto, usamos inglés internamente para máxima precisión."
-)
-etiquetas_personalizadas = [e.strip() for e in etiquetas_texto.split(",") if e.strip()]
-
-# Determinar si el usuario de verdad personalizó las etiquetas.
-# Si son idénticas a las por defecto, pasaremos None para que el motor use las etiquetas descriptivas en inglés (máxima precisión).
-if etiquetas_personalizadas == etiquetas_defecto:
-    etiquetas_para_ia = None
-else:
-    etiquetas_para_ia = etiquetas_personalizadas
+etiquetas_para_ia = None
 
 # Botón para limpiar caché / temporales
-if st.sidebar.button("🧹 Limpiar audios temporales"):
+if st.sidebar.button("🧹 Limpiar temporales"):
     limpiar_audios_temporales()
     st.session_state.comentarios = []
     st.session_state.video_exportado = None
@@ -371,8 +375,6 @@ if uploaded_file is not None:
         with h_col2:
             cooldown_placeholder = st.empty()
             cooldown_placeholder.metric("Estado de Cooldown", "Listo", delta=None)
-
-        top_predicciones_placeholder = st.empty()
             
         st.markdown('</div>', unsafe_allow_html=True)
         
@@ -443,7 +445,7 @@ if uploaded_file is not None:
                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 
                 # Mostrar en el panel de vista de la IA
-                vista_ia_placeholder.image(frame_rgb, width='stretch', caption=f"Frame analizado en el segundo {timestamp_seg:.2f}")
+                vista_ia_placeholder.image(frame_rgb, width='stretch')
                 
                 # Convertir a imagen PIL para los modelos de Hugging Face
                 imagen_pil = Image.fromarray(frame_rgb)
@@ -505,12 +507,6 @@ if uploaded_file is not None:
                 else:
                     cooldown_placeholder.metric("Estado de Cooldown", "Listo", delta="Disponible", delta_color="normal")
 
-                prediccion_debug = ia_engine.obtener_ultima_prediccion()
-                top_scores = prediccion_debug.get("scores", [])
-                if top_scores:
-                    top_texto = " | ".join([f"{etq}: {score*100:.0f}%" for etq, score in top_scores[:3]])
-                    top_predicciones_placeholder.caption(f"Vision top: {top_texto} · crudo: {estado_crudo} · estable: {estado}")
-
                 # Si se decide comentar, ejecutamos el generador y TTS
                 if debe_comentar:
                     comentario_texto = ia_engine.generar_comentario(estado, confianza, juego_seleccionado, usar_nlp=usar_nlp_hf)
@@ -518,6 +514,7 @@ if uploaded_file is not None:
                     # Generar audio
                     audio_filename = f"comentario_{int(timestamp_seg)}s.wav"
                     audio_local_path = ia_engine.sintetizar_voz(comentario_texto, "temp_audio", audio_filename)
+                    frame_local_path = guardar_frame_comentado(frame_rgb, timestamp_seg)
                     
                     # Guardar comentario en el historial
                     st.session_state.comentarios.append({
@@ -526,6 +523,7 @@ if uploaded_file is not None:
                         "confianza": confianza,
                         "texto": comentario_texto,
                         "audio_path": audio_local_path,
+                        "frame_path": frame_local_path,
                         "razon": razon
                     })
                     
@@ -552,6 +550,21 @@ if uploaded_file is not None:
         progress_bar.progress(1.0)
         status_text.success("🎉 ¡Procesamiento y análisis de transmisión finalizado!")
         
+    # --- GALERÍA DE FRAMES NARRADOS ---
+    if len(st.session_state.comentarios) > 0:
+        st.markdown("---")
+        with st.expander(f"🖼️ Frames donde habló el narrador ({len(st.session_state.comentarios)})", expanded=False):
+            columnas_galeria = st.columns(3)
+            for idx, comentario in enumerate(st.session_state.comentarios):
+                with columnas_galeria[idx % 3]:
+                    frame_path = comentario.get("frame_path")
+                    if frame_path and os.path.exists(frame_path):
+                        st.image(frame_path, width='stretch')
+                    else:
+                        st.info("Frame no disponible")
+                    st.caption(f"Minuto {formatear_tiempo(comentario['timestamp'])}")
+                    st.markdown(f"**{comentario['texto']}**")
+
     # --- SECCIÓN DE EXPORTACIÓN DE VIDEO ---
     if len(st.session_state.comentarios) > 0:
         st.markdown("---")
