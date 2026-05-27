@@ -4,21 +4,18 @@ Repositorio de trabajos, ejercicios y proyectos desarrollados durante la materia
 
 ## Contenido del repositorio
 
-```text
-IA-Repo/
-|-- Historia de la Inteligencia Artificial/
-|-- Exposicion/
-|-- diagnostico/
-|-- 1.- Busquedas Inteligentes/
-|-- 2.- Dataset Rostros/
-|-- 3.- Ejercicios de Machine Learning/
-|-- ComentaristaIA/
-`-- README.md
-```
+- [Historia de la Inteligencia Artificial](Historia%20de%20la%20Inteligencia%20Artificial/)
+- [Exposicion](Exposici%C3%B3n/)
+- [diagnostico](diagnostico/)
+- [1.- Busquedas Inteligentes](1.-%20Busquedas%20Inteligentes/)
+- [2.- Dataset Rostros](2.-%20Dataset%20Rostros/)
+- [3.- Ejercicios de Machine Learning](3.-%20Ejercicios%20de%20Machine%20Learning/)
+- [ComentaristaIA](ComentaristaIA/)
+- [README.md](README.md)
 
 ## Proyectos y ejercicios
 
-### Historia de la Inteligencia Artificial
+### [Historia de la Inteligencia Artificial](Historia%20de%20la%20Inteligencia%20Artificial/)
 
 Material visual sobre la evolucion de la Inteligencia Artificial. Esta seccion funciona como apoyo teorico para ubicar los principales avances, etapas y conceptos historicos de la disciplina.
 
@@ -28,7 +25,7 @@ Material visual sobre la evolucion de la Inteligencia Artificial. Esta seccion f
 - Evolucion historica de la tecnologia.
 - Relacion entre IA, computacion y automatizacion.
 
-### Exposicion
+### [Exposicion](Exposici%C3%B3n/)
 
 Carpeta con documentos PDF usados como material de investigacion y presentacion. Incluye contenido relacionado con agentes inteligentes y articulos de apoyo para el analisis de temas actuales de IA.
 
@@ -36,7 +33,7 @@ Carpeta con documentos PDF usados como material de investigacion y presentacion.
 
 - Agentes de IA.
 
-### Diagnostico
+### [Diagnostico](diagnostico/)
 
 Ejercicio inicial en Java con estructuras de arbol y nodos. Sirve como practica base para representar datos conectados y recorrer una estructura de forma ordenada.
 
@@ -47,11 +44,11 @@ Ejercicio inicial en Java con estructuras de arbol y nodos. Sirve como practica 
 - Busqueda por recorrido en preorden.
 - Representacion de estructuras para problemas de IA.
 
-### 1.- Busquedas Inteligentes
+### [1.- Busquedas Inteligentes](1.-%20Busquedas%20Inteligentes/)
 
 Seccion dedicada a problemas clasicos de busqueda. Los ejercicios trabajan con estados, nodos, movimientos validos, expansion de soluciones y comparacion de algoritmos.
 
-#### 8 Puzzle
+#### [8 Puzzle](1.-%20Busquedas%20Inteligentes/8%20puzzle/)
 
 Programa en Java que resuelve un tablero 3x3 usando busqueda en anchura. El estado inicial se expande hasta encontrar el estado objetivo y despues se muestra la ruta de solucion.
 
@@ -63,7 +60,7 @@ Programa en Java que resuelve un tablero 3x3 usando busqueda en anchura. El esta
 - Control de estados visitados.
 - Reconstruccion de la ruta de solucion.
 
-#### 24-Puzzle
+#### [24-Puzzle](1.-%20Busquedas%20Inteligentes/24-Puzzle/)
 
 Programa en Java para resolver el 24-Puzzle en un tablero 5x5. Permite trabajar con estados manuales o aleatorios resolubles y medir el rendimiento de los algoritmos.
 
@@ -81,11 +78,11 @@ Programa en Java para resolver el 24-Puzzle en un tablero 5x5. Permite trabajar 
 
 El ejercicio modela el tablero como un arreglo de estados y calcula los movimientos posibles del espacio vacio. La solucion se obtiene mediante algoritmos de busqueda y se evalua el costo computacional de cada enfoque. La comparacion permite observar como una buena heuristica reduce el numero de nodos explorados.
 
-### 2.- Dataset Rostros
+### [2.- Dataset Rostros](2.-%20Dataset%20Rostros/)
 
 Seccion enfocada en vision artificial y reconocimiento facial. Contiene datasets de rostros, scripts de procesamiento, aumentacion de imagenes, modelos entrenados y pruebas de reconocimiento.
 
-#### Reconocimiento Facial
+#### [Reconocimiento Facial](2.-%20Dataset%20Rostros/Reconocimiento_Facial/)
 
 Proyecto para construir un dataset de rostros y preparar imagenes para reconocimiento. Incluye captura con camara, descarga de imagenes, busqueda en internet, deteccion del rostro principal, aumentacion de datos y renumeracion de archivos.
 
@@ -97,7 +94,7 @@ Proyecto para construir un dataset de rostros y preparar imagenes para reconocim
 - Aumentacion de datos.
 - Preparacion de datos para entrenamiento.
 
-#### Proyecto CNN
+#### [Proyecto CNN](2.-%20Dataset%20Rostros/Proyecto%20CNN/)
 
 Proyecto de reconocimiento facial basado en redes neuronales convolucionales. Usa datasets organizados por persona, datos aumentados, modelos entrenados y archivos de etiquetas para clasificar rostros.
 
@@ -114,7 +111,7 @@ Proyecto de reconocimiento facial basado en redes neuronales convolucionales. Us
 
 El proyecto toma imagenes de rostros, las organiza por clase, genera variaciones para mejorar el entrenamiento y entrena una CNN capaz de reconocer personas. Tambien incluye evaluacion del modelo y prediccion en imagenes nuevas o video en tiempo real.
 
-### 3.- Ejercicios de Machine Learning
+### [3.- Ejercicios de Machine Learning](3.-%20Ejercicios%20de%20Machine%20Learning/)
 
 Coleccion de notebooks y scripts de clase con ejercicios de aprendizaje automatico. Incluye datasets conocidos y ejemplos practicos para trabajar con datos numericos, texto e imagenes.
 
@@ -137,7 +134,7 @@ Coleccion de notebooks y scripts de clase con ejercicios de aprendizaje automati
 
 Esta seccion funciona como banco de practicas de Machine Learning. Los ejercicios muestran el flujo general de trabajo: cargar datos, limpiar o transformar caracteristicas, entrenar modelos, evaluar resultados y comparar tecnicas segun el tipo de problema.
 
-### ComentaristaIA
+### [ComentaristaIA](ComentaristaIA/)
 
 Aplicacion de IA multimodal para narrar automaticamente clips de videojuegos. Esta enfocada en videos de Minecraft y combina vision artificial, modelos de lenguaje, reglas heuristicas, sintesis de voz e interfaz web.
 
